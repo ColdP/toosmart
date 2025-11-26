@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
     
     <script>
         tailwind.config = {
+            darkMode: 'class', // Enable class-based dark mode
             theme: {
                 extend: {
                     colors: {
@@ -53,12 +54,21 @@
         ::-webkit-scrollbar-track {
             background: #f0f9ff;
         }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
         ::-webkit-scrollbar-thumb {
             background: #bae6fd;
             border-radius: 4px;
         }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+        }
         ::-webkit-scrollbar-thumb:hover {
             background: #7dd3fc;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
         }
 
         /* Input Range Styling for Audio Player */
@@ -78,6 +88,9 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             transition: transform 0.1s;
         }
+        .dark input[type=range]::-webkit-slider-thumb {
+            background: #38bdf8;
+        }
 
         input[type=range]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
@@ -90,12 +103,18 @@
             background: #bae6fd;
             border-radius: 2px;
         }
+        .dark input[type=range]::-webkit-slider-runnable-track {
+            background: #334155;
+        }
         
         .lyrics-line {
             transition: color 0.3s ease;
         }
         .lyrics-line:hover {
             color: #0369a1;
+        }
+        .dark .lyrics-line:hover {
+            color: #7dd3fc;
         }
         
         /* Album art playing state */
@@ -107,6 +126,11 @@
             0% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
             50% { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.3); }
             100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        }
+        .dark @keyframes breathe {
+            0% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+            50% { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
         }
 
         /* Modal Transitions */
@@ -129,16 +153,28 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-smart-blue-50 to-white min-h-screen text-slate-700 font-serif flex flex-col items-center relative">
+<body class="bg-gradient-to-b from-smart-blue-50 to-white dark:from-slate-900 dark:to-slate-950 min-h-screen text-slate-700 dark:text-slate-300 font-serif flex flex-col items-center relative transition-colors duration-500">
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggleBtn" class="fixed top-4 right-4 z-30 p-2 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-md text-smart-blue-600 dark:text-smart-blue-400 hover:scale-105 transition-all duration-300" aria-label="Toggle Dark Mode">
+        <!-- Sun Icon (for Dark Mode) -->
+        <svg id="sunIcon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+        </svg>
+        <!-- Moon Icon (for Light Mode) -->
+        <svg id="moonIcon" class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.75 9.75 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.75 9.75 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+        </svg>
+    </button>
 
     <!-- Content Container -->
     <main class="w-full max-w-2xl px-6 py-12 md:py-20 flex-grow">
         
         <!-- Header info -->
         <header class="text-center mb-16 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
-            <h1 class="text-4xl md:text-5xl font-bold text-smart-blue-900 mb-3 tracking-wide">太聰明</h1>
-            <p class="text-lg md:text-xl text-smart-blue-600 font-light tracking-widest">陳綺貞</p>
-            <div class="w-16 h-1 bg-smart-blue-200 mx-auto mt-6 rounded-full"></div>
+            <h1 class="text-4xl md:text-5xl font-bold text-smart-blue-900 dark:text-smart-blue-300 mb-3 tracking-wide transition-colors">太聰明</h1>
+            <p class="text-lg md:text-xl text-smart-blue-600 dark:text-smart-blue-400 font-light tracking-widest transition-colors">陳綺貞</p>
+            <div class="w-16 h-1 bg-smart-blue-200 dark:bg-smart-blue-700 mx-auto mt-6 rounded-full transition-colors"></div>
         </header>
 
         <!-- Lyrics Section -->
@@ -158,7 +194,7 @@
                 <p class="lyrics-line cursor-pointer" data-id="8">只是怕親手將我的真心葬送</p>
             </section>
 
-            <section class="lyrics-block font-medium text-smart-blue-800">
+            <section class="lyrics-block font-medium text-smart-blue-800 dark:text-smart-blue-200">
                 <p class="lyrics-line cursor-pointer" data-id="9">我猜著你的心</p>
                 <p class="lyrics-line cursor-pointer" data-id="10">要再一次確定</p>
                 <p class="lyrics-line cursor-pointer" data-id="11">遙遠的距離都是因為太過聰明</p>
@@ -167,8 +203,8 @@
                 <p class="lyrics-line cursor-pointer" data-id="14">混亂的思緒都是因為太想靠近你</p>
             </section>
 
-            <section class="lyrics-block text-slate-500">
-                <span class="block w-2 h-2 bg-smart-blue-200 rounded-full mx-auto my-8"></span>
+            <section class="lyrics-block text-slate-500 dark:text-slate-400">
+                <span class="block w-2 h-2 bg-smart-blue-200 dark:bg-smart-blue-700 rounded-full mx-auto my-8"></span>
             </section>
 
             <section class="lyrics-block">
@@ -178,7 +214,7 @@
                 <p class="lyrics-line cursor-pointer" data-id="18">只是怕親手將我的真心葬送</p>
             </section>
 
-            <section class="lyrics-block font-medium text-smart-blue-800">
+            <section class="lyrics-block font-medium text-smart-blue-800 dark:text-smart-blue-200">
                 <p class="lyrics-line cursor-pointer" data-id="19">我猜著你的心</p>
                 <p class="lyrics-line cursor-pointer" data-id="20">要再一次確定</p>
                 <p class="lyrics-line cursor-pointer" data-id="21">遙遠的距離都是因為太過聰明</p>
@@ -194,7 +230,7 @@
                 <p class="lyrics-line cursor-pointer" data-id="28">只是怕親手將我的真心葬送</p>
             </section>
 
-            <section class="lyrics-block text-smart-blue-600 italic">
+            <section class="lyrics-block text-smart-blue-600 dark:text-smart-blue-400 italic">
                 <p class="lyrics-line cursor-pointer" data-id="29">只是怕親手將我的真心葬送</p>
                 <p class="lyrics-line cursor-pointer" data-id="30">我開始後悔不應該太聰明的賣弄</p>
                 <p class="lyrics-line cursor-pointer" data-id="31">只是怕親手將我的真心葬送</p>
@@ -206,14 +242,14 @@
     </main>
 
     <!-- Footer / Player Section -->
-    <footer class="w-full bg-white border-t border-smart-blue-100 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] mt-auto z-20">
+    <footer class="w-full bg-white dark:bg-slate-900 border-t border-smart-blue-100 dark:border-slate-800 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.5)] mt-auto z-20 transition-colors duration-300">
         <div class="max-w-2xl mx-auto px-6 py-6 md:py-8">
             <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
                 
                 <!-- Album Cover -->
                 <div class="relative group flex-shrink-0">
                     <div class="absolute -inset-1 bg-gradient-to-r from-smart-blue-300 to-smart-blue-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                    <div id="albumArt" class="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden shadow-lg bg-smart-blue-50">
+                    <div id="albumArt" class="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden shadow-lg bg-smart-blue-50 dark:bg-slate-800">
                         <img src="https://too.smart.btm-m.site/cover.jpg" 
                              alt="太聰明 Album Cover" 
                              class="w-full h-full object-cover transition-transform duration-700"
@@ -229,10 +265,10 @@
                     <!-- Title & Time -->
                     <div class="flex items-center justify-between mb-2">
                         <div>
-                            <h3 class="font-bold text-smart-blue-900 text-lg">太聰明</h3>
-                            <p class="text-sm text-smart-blue-500">陳綺貞</p>
+                            <h3 class="font-bold text-smart-blue-900 dark:text-smart-blue-300 text-lg transition-colors">太聰明</h3>
+                            <p class="text-sm text-smart-blue-500 dark:text-smart-blue-400 transition-colors">陳綺貞</p>
                         </div>
-                        <div class="text-xs font-mono text-smart-blue-400">
+                        <div class="text-xs font-mono text-smart-blue-400 dark:text-slate-500 transition-colors">
                             <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
                         </div>
                     </div>
@@ -241,8 +277,8 @@
                     <div class="relative w-full h-6 flex items-center mb-4 group cursor-pointer">
                         <input type="range" id="progressBar" value="0" step="0.1" class="w-full z-10 relative cursor-pointer">
                         <!-- Custom track background -->
-                        <div class="absolute w-full h-1 bg-smart-blue-100 rounded-full top-1/2 transform -translate-y-1/2 pointer-events-none overflow-hidden">
-                             <div id="progressFill" class="h-full bg-smart-blue-500 w-0 transition-all duration-100 ease-linear"></div>
+                        <div class="absolute w-full h-1 bg-smart-blue-100 dark:bg-slate-700 rounded-full top-1/2 transform -translate-y-1/2 pointer-events-none overflow-hidden transition-colors">
+                             <div id="progressFill" class="h-full bg-smart-blue-500 dark:bg-smart-blue-400 w-0 transition-all duration-100 ease-linear"></div>
                         </div>
                     </div>
 
@@ -251,24 +287,24 @@
                         
                         <!-- Play Controls (Grouped) -->
                         <div class="flex items-center gap-6">
-                            <button id="skipBackBtn" class="text-smart-blue-300 hover:text-smart-blue-600 transition p-2">
+                            <button id="skipBackBtn" class="text-smart-blue-300 dark:text-slate-500 hover:text-smart-blue-600 dark:hover:text-smart-blue-300 transition p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
                             </button>
 
-                            <button id="playPauseBtn" class="w-12 h-12 bg-smart-blue-600 text-white rounded-full flex items-center justify-center hover:bg-smart-blue-700 shadow-md hover:shadow-lg transition transform active:scale-95">
+                            <button id="playPauseBtn" class="w-12 h-12 bg-smart-blue-600 dark:bg-smart-blue-500 text-white rounded-full flex items-center justify-center hover:bg-smart-blue-700 dark:hover:bg-smart-blue-400 shadow-md hover:shadow-lg transition transform active:scale-95">
                                 <!-- Play Icon -->
                                 <svg id="playIcon" class="ml-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                 <!-- Pause Icon -->
                                 <svg id="pauseIcon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                             </button>
 
-                            <button id="skipFwdBtn" class="text-smart-blue-300 hover:text-smart-blue-600 transition p-2">
+                            <button id="skipFwdBtn" class="text-smart-blue-300 dark:text-slate-500 hover:text-smart-blue-600 dark:hover:text-smart-blue-300 transition p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
                             </button>
                         </div>
 
                         <!-- Share Button (Opposite End) -->
-                        <button id="openShareBtn" class="flex items-center gap-2 text-smart-blue-500 hover:text-smart-blue-700 hover:bg-smart-blue-50 px-3 py-2 rounded-lg transition" title="分享歌詞">
+                        <button id="openShareBtn" class="flex items-center gap-2 text-smart-blue-500 dark:text-smart-blue-400 hover:text-smart-blue-700 dark:hover:text-smart-blue-200 hover:bg-smart-blue-50 dark:hover:bg-slate-800 px-3 py-2 rounded-lg transition" title="分享歌詞">
                             <span class="text-sm font-semibold hidden md:inline">分享歌詞</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                         </button>
@@ -281,19 +317,18 @@
 
     <!-- Share Modal Overlay -->
     <div id="shareModal" class="fixed inset-0 z-50 hidden bg-smart-blue-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-fade-in-up">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-fade-in-up transition-colors duration-300">
             
             <!-- Left: Controls & Selection -->
-            <!-- Modified: Added h-[40%] md:h-auto to restrict height on mobile -->
-            <div class="w-full md:w-1/3 flex flex-col border-r border-smart-blue-100 bg-white h-[40%] md:h-auto">
-                <div class="p-4 md:p-6 border-b border-smart-blue-100 flex justify-between items-center bg-smart-blue-50">
-                    <h3 class="font-bold text-smart-blue-900 text-lg">選擇歌詞</h3>
-                    <button id="closeShareBtn" class="text-smart-blue-400 hover:text-smart-blue-700">
+            <div class="w-full md:w-1/3 flex flex-col border-r border-smart-blue-100 dark:border-slate-700 bg-white dark:bg-slate-800 h-[40%] md:h-auto transition-colors duration-300">
+                <div class="p-4 md:p-6 border-b border-smart-blue-100 dark:border-slate-700 flex justify-between items-center bg-smart-blue-50 dark:bg-slate-900 transition-colors">
+                    <h3 class="font-bold text-smart-blue-900 dark:text-white text-lg">選擇歌詞</h3>
+                    <button id="closeShareBtn" class="text-smart-blue-400 dark:text-slate-400 hover:text-smart-blue-700 dark:hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 
-                <div class="p-2 bg-yellow-50 text-yellow-700 text-xs text-center border-b border-yellow-100 flex-shrink-0">
+                <div class="p-2 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 text-xs text-center border-b border-yellow-100 dark:border-yellow-900/30 flex-shrink-0 transition-colors">
                     點擊下方歌詞進行選擇
                 </div>
 
@@ -304,41 +339,52 @@
             </div>
 
             <!-- Right: Preview & Settings -->
-            <!-- Modified: Added h-[60%] md:h-auto to ensure it displays on mobile -->
-            <div class="w-full md:w-2/3 flex flex-col bg-slate-50 relative h-[60%] md:h-auto border-t md:border-t-0 border-smart-blue-100">
+            <div class="w-full md:w-2/3 flex flex-col bg-slate-50 dark:bg-slate-950 relative h-[60%] md:h-auto border-t md:border-t-0 border-smart-blue-100 dark:border-slate-700 transition-colors duration-300">
                 <!-- Toolbar -->
-                <div class="p-2 md:p-4 bg-white border-b border-smart-blue-100 flex flex-wrap gap-2 md:gap-4 items-center justify-between z-10 shadow-sm flex-shrink-0">
+                <div class="p-2 md:p-4 bg-white dark:bg-slate-900 border-b border-smart-blue-100 dark:border-slate-700 flex flex-wrap gap-2 md:gap-4 items-center justify-between z-10 shadow-sm flex-shrink-0 transition-colors">
                     <div class="flex items-center gap-2 md:gap-4 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
                         <!-- Cover Toggle -->
-                        <label class="flex items-center gap-1 md:gap-2 cursor-pointer text-xs md:text-sm text-smart-blue-800 flex-shrink-0">
+                        <label class="flex items-center gap-1 md:gap-2 cursor-pointer text-xs md:text-sm text-smart-blue-800 dark:text-slate-300 flex-shrink-0">
                             <input type="checkbox" id="showCoverCheck" checked class="accent-smart-blue-600 w-3 h-3 md:w-4 md:h-4">
                             <span>顯示封面</span>
                         </label>
 
-                        <div class="w-px h-4 bg-smart-blue-200 mx-1"></div>
+                        <div class="w-px h-4 bg-smart-blue-200 dark:bg-slate-700 mx-1"></div>
+
+                        <!-- Canvas Theme Toggle -->
+                        <div class="flex items-center bg-smart-blue-50 dark:bg-slate-800 rounded-lg p-1 border border-smart-blue-100 dark:border-slate-700 flex-shrink-0">
+                             <button class="p-1 md:p-1.5 rounded text-xs md:text-sm transition theme-btn bg-white dark:bg-slate-600 shadow-sm text-smart-blue-600 dark:text-white" data-theme="light" title="淺色圖片">
+                                淺色
+                             </button>
+                             <button class="p-1 md:p-1.5 rounded text-xs md:text-sm transition theme-btn text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700" data-theme="dark" title="暗色圖片">
+                                暗色
+                             </button>
+                        </div>
+
+                        <div class="w-px h-4 bg-smart-blue-200 dark:bg-slate-700 mx-1"></div>
 
                         <!-- Alignment -->
-                        <div class="flex bg-smart-blue-50 rounded-lg p-1 border border-smart-blue-100 flex-shrink-0">
-                            <button class="p-1 md:p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn" data-align="left" title="靠左">
+                        <div class="flex bg-smart-blue-50 dark:bg-slate-800 rounded-lg p-1 border border-smart-blue-100 dark:border-slate-700 flex-shrink-0">
+                            <button class="p-1 md:p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm text-smart-blue-600 dark:text-slate-300 transition align-btn" data-align="left" title="靠左">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
                             </button>
-                            <button class="p-1 md:p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn bg-white shadow-sm" data-align="center" title="置中">
+                            <button class="p-1 md:p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm text-smart-blue-600 dark:text-slate-300 transition align-btn bg-white dark:bg-slate-600 shadow-sm" data-align="center" title="置中">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
                             </button>
-                            <button class="p-1 md:p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn" data-align="right" title="靠右">
+                            <button class="p-1 md:p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm text-smart-blue-600 dark:text-slate-300 transition align-btn" data-align="right" title="靠右">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg>
                             </button>
                         </div>
                     </div>
 
-                    <button id="downloadBtn" class="bg-smart-blue-600 hover:bg-smart-blue-700 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold shadow-md transition flex items-center gap-2 flex-shrink-0 ml-auto md:ml-0">
+                    <button id="downloadBtn" class="bg-smart-blue-600 hover:bg-smart-blue-700 dark:bg-smart-blue-500 dark:hover:bg-smart-blue-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold shadow-md transition flex items-center gap-2 flex-shrink-0 ml-auto md:ml-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         下載圖片
                     </button>
                 </div>
 
                 <!-- Canvas Preview Container -->
-                <div class="flex-grow overflow-auto p-4 md:p-8 flex items-start justify-center bg-slate-200">
+                <div class="flex-grow overflow-auto p-4 md:p-8 flex items-start justify-center bg-slate-200 dark:bg-slate-950 transition-colors">
                     <canvas id="shareCanvas" class="shadow-2xl max-w-full h-auto bg-white"></canvas>
                 </div>
             </div>
@@ -364,6 +410,12 @@
             const skipBackBtn = document.getElementById('skipBackBtn');
             const skipFwdBtn = document.getElementById('skipFwdBtn');
 
+            // Theme Logic
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const htmlElement = document.documentElement;
+
             // Share Modal Logic Elements
             const openShareBtn = document.getElementById('openShareBtn');
             const closeShareBtn = document.getElementById('closeShareBtn');
@@ -373,6 +425,7 @@
             const ctx = canvas.getContext('2d');
             const showCoverCheck = document.getElementById('showCoverCheck');
             const alignBtns = document.querySelectorAll('.align-btn');
+            const themeBtns = document.querySelectorAll('.theme-btn'); // New theme buttons
             const downloadBtn = document.getElementById('downloadBtn');
             const sourceCoverImage = document.getElementById('sourceCoverImage');
 
@@ -380,8 +433,24 @@
             let isDragging = false;
             let selectedLyrics = new Set();
             let currentAlign = 'center';
+            let currentCanvasTheme = 'light'; // 'light' or 'dark'
             let showCover = true;
             let lyricsData = [];
+
+            // --- Theme Toggle Functionality ---
+            themeToggleBtn.addEventListener('click', () => {
+                htmlElement.classList.toggle('dark');
+                const isDark = htmlElement.classList.contains('dark');
+                
+                if (isDark) {
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            });
+
 
             // --- Audio Player Logic (Preserved) ---
             const formatTime = (seconds) => {
@@ -478,9 +547,13 @@
                 modalLyricsList.innerHTML = '';
                 lyricsData.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = `p-3 rounded-lg cursor-pointer transition text-sm md:text-base border ${selectedLyrics.has(item.id) 
-                        ? 'bg-smart-blue-100 border-smart-blue-300 text-smart-blue-900 font-bold' 
-                        : 'hover:bg-gray-50 border-transparent text-gray-600'}`;
+                    // Adjust classes for dark mode support in modal
+                    const isSelected = selectedLyrics.has(item.id);
+                    const baseClass = "p-3 rounded-lg cursor-pointer transition text-sm md:text-base border";
+                    const selectedClass = "bg-smart-blue-100 dark:bg-smart-blue-900/40 border-smart-blue-300 dark:border-smart-blue-500 text-smart-blue-900 dark:text-smart-blue-100 font-bold";
+                    const unselectedClass = "hover:bg-gray-50 dark:hover:bg-slate-700 border-transparent text-gray-600 dark:text-slate-400";
+                    
+                    div.className = `${baseClass} ${isSelected ? selectedClass : unselectedClass}`;
                     div.textContent = item.text;
                     div.onclick = () => toggleLyricSelection(item.id);
                     modalLyricsList.appendChild(div);
@@ -499,8 +572,10 @@
 
             // 3. Draw Canvas
             const drawCanvas = () => {
-                // Config
-                const width = 1080;
+                // Config - High DPI Support
+                const baseWidth = 1080;
+                const scale = 2; // Super sampling factor (2x resolution = 2160px width)
+                
                 // Calculate height dynamically based on content
                 // Base padding
                 const padding = 80;
@@ -516,33 +591,46 @@
 
                 const totalHeight = padding + coverSize + coverMargin + textHeight + footerHeight + padding;
 
-                // Set Canvas Size
-                canvas.width = width;
-                canvas.height = totalHeight;
+                // Set Canvas Size (Physical Pixels)
+                canvas.width = baseWidth * scale;
+                canvas.height = totalHeight * scale;
+
+                // Set Context Scale to match factor
+                ctx.scale(scale, scale);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
 
                 // --- Background ---
-                const gradient = ctx.createLinearGradient(0, 0, width, totalHeight);
-                gradient.addColorStop(0, '#f0f9ff'); // smart-blue-50
-                gradient.addColorStop(1, '#ffffff');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, width, totalHeight);
+                // Draw background based on theme
+                const gradient = ctx.createLinearGradient(0, 0, baseWidth, totalHeight);
+                
+                if (currentCanvasTheme === 'light') {
+                    gradient.addColorStop(0, '#f0f9ff'); // smart-blue-50
+                    gradient.addColorStop(1, '#ffffff');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, baseWidth, totalHeight);
+                } else {
+                    // Dark Theme
+                    gradient.addColorStop(0, '#0f172a'); // slate-900
+                    gradient.addColorStop(1, '#1e293b'); // slate-800
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, baseWidth, totalHeight);
+                }
 
                 let currentY = padding;
 
                 // --- Cover Image ---
                 if (showCover && sourceCoverImage.complete) {
                     try {
-                        const coverX = (width - coverSize) / 2;
+                        const coverX = (baseWidth - coverSize) / 2;
                         
                         // Shadow
                         ctx.save();
-                        ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+                        ctx.shadowColor = currentCanvasTheme === 'light' ? "rgba(0, 0, 0, 0.15)" : "rgba(0, 0, 0, 0.5)";
                         ctx.shadowBlur = 40;
                         ctx.shadowOffsetY = 20;
                         
                         // Draw Image
-                        // Note: Using the source image from DOM which has crossorigin set
-                        // We assume it's loaded because of window.onload or prior check
                         ctx.drawImage(sourceCoverImage, coverX, currentY, coverSize, coverSize);
                         ctx.restore();
 
@@ -550,33 +638,35 @@
                     } catch (e) {
                         console.warn("Canvas Tainted or Image Error", e);
                         // Fallback placeholder
-                        ctx.fillStyle = "#bae6fd";
-                        ctx.fillRect((width-coverSize)/2, currentY, coverSize, coverSize);
+                        ctx.fillStyle = currentCanvasTheme === 'light' ? "#bae6fd" : "#334155";
+                        ctx.fillRect((baseWidth-coverSize)/2, currentY, coverSize, coverSize);
                         currentY += coverSize + coverMargin;
                     }
                 } else if (showCover) {
                     // Placeholder if loading or broken
-                    ctx.fillStyle = "#e0f2fe";
-                    ctx.fillRect((width-500)/2, currentY, 500, 500);
+                    ctx.fillStyle = currentCanvasTheme === 'light' ? "#e0f2fe" : "#1e293b";
+                    ctx.fillRect((baseWidth-500)/2, currentY, 500, 500);
                     currentY += 560;
                 }
 
                 // --- Lyrics Text ---
                 ctx.font = `600 ${fontSize}px "Noto Serif TC", serif`;
-                ctx.fillStyle = "#0c4a6e"; // smart-blue-900
+                
+                // Text Color based on theme
+                ctx.fillStyle = currentCanvasTheme === 'light' ? "#0c4a6e" : "#e2e8f0"; // smart-blue-900 vs slate-200
                 ctx.textBaseline = "middle";
 
                 if (selectedLines.length === 0) {
                     // Prompt text
-                    ctx.fillStyle = "#94a3b8";
+                    ctx.fillStyle = currentCanvasTheme === 'light' ? "#94a3b8" : "#64748b";
                     ctx.textAlign = "center";
-                    ctx.fillText("請選擇歌詞...", width / 2, currentY + 50);
+                    ctx.fillText("請選擇歌詞...", baseWidth / 2, currentY + 50);
                     currentY += 100;
                 } else {
                     selectedLines.forEach(line => {
-                        let x = width / 2;
+                        let x = baseWidth / 2;
                         if (currentAlign === 'left') x = 120; // Padding left
-                        if (currentAlign === 'right') x = width - 120; // Padding right
+                        if (currentAlign === 'right') x = baseWidth - 120; // Padding right
 
                         ctx.textAlign = currentAlign;
                         ctx.fillText(line.text, x, currentY + (fontSize/2));
@@ -589,34 +679,29 @@
                 currentY += 60; 
 
                 // Draw decorative divider
-                ctx.strokeStyle = "#bae6fd"; // smart-blue-200
+                ctx.strokeStyle = currentCanvasTheme === 'light' ? "#bae6fd" : "#475569"; // smart-blue-200 vs slate-600
                 ctx.lineWidth = 4;
                 ctx.beginPath();
-                ctx.moveTo(width / 2 - 40, currentY);
-                ctx.lineTo(width / 2 + 40, currentY);
+                ctx.moveTo(baseWidth / 2 - 40, currentY);
+                ctx.lineTo(baseWidth / 2 + 40, currentY);
                 ctx.stroke();
 
                 currentY += 60;
 
                 ctx.font = `bold 42px "Noto Serif TC", serif`;
-                ctx.fillStyle = "#0284c7"; // smart-blue-600
+                ctx.fillStyle = currentCanvasTheme === 'light' ? "#0284c7" : "#38bdf8"; // smart-blue-600 vs smart-blue-400
                 ctx.textAlign = "center";
                 
-                // Calculate positions for Title and Artist based on align setting?
-                // Requirements say: "Cover (opt), Selected Lyrics, Title/Artist (Left/Center/Right positioning optional?)"
-                // "Cover, Lyrics, Title, Artist" layout.
-                // Let's stick to the align setting for consistency.
-                
-                let footerX = width / 2;
+                let footerX = baseWidth / 2;
                 if (currentAlign === 'left') footerX = 120;
-                if (currentAlign === 'right') footerX = width - 120;
+                if (currentAlign === 'right') footerX = baseWidth - 120;
                 ctx.textAlign = currentAlign;
 
                 ctx.fillText("太聰明", footerX, currentY);
                 
                 currentY += 55;
                 ctx.font = `32px "Noto Serif TC", serif`;
-                ctx.fillStyle = "#64748b"; // slate-500
+                ctx.fillStyle = currentCanvasTheme === 'light' ? "#64748b" : "#94a3b8"; // slate-500 vs slate-400
                 ctx.fillText("陳綺貞", footerX, currentY);
             };
 
@@ -625,10 +710,8 @@
                 initLyricsData();
                 populateModalList();
                 shareModal.classList.remove('hidden');
-                // Use a slight timeout to allow image to load if not cached, though likely it is
                 setTimeout(() => {
                     drawCanvas();
-                    // Initial animation class
                     shareModal.children[0].classList.add('modal-enter-active');
                 }, 50);
             });
@@ -646,20 +729,37 @@
                 btn.addEventListener('click', () => {
                     // UI update
                     alignBtns.forEach(b => {
-                        b.classList.remove('bg-white', 'shadow-sm');
-                        b.classList.add('hover:bg-white');
+                        b.classList.remove('bg-white', 'shadow-sm', 'dark:bg-slate-600');
+                        b.classList.add('hover:bg-white', 'dark:hover:bg-slate-700');
                     });
-                    btn.classList.add('bg-white', 'shadow-sm');
-                    btn.classList.remove('hover:bg-white');
+                    btn.classList.add('bg-white', 'shadow-sm', 'dark:bg-slate-600');
+                    btn.classList.remove('hover:bg-white', 'dark:hover:bg-slate-700');
                     
                     currentAlign = btn.dataset.align;
                     drawCanvas();
                 });
             });
 
+            themeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update UI buttons
+                    themeBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'dark:bg-slate-600', 'shadow-sm', 'text-smart-blue-600', 'dark:text-white');
+                        b.classList.add('text-slate-500', 'dark:text-slate-400', 'hover:bg-white/50', 'dark:hover:bg-slate-700');
+                    });
+                    
+                    // Activate clicked button
+                    btn.classList.add('bg-white', 'dark:bg-slate-600', 'shadow-sm', 'text-smart-blue-600', 'dark:text-white');
+                    btn.classList.remove('text-slate-500', 'dark:text-slate-400', 'hover:bg-white/50', 'dark:hover:bg-slate-700');
+
+                    currentCanvasTheme = btn.dataset.theme;
+                    drawCanvas();
+                });
+            });
+
             downloadBtn.addEventListener('click', () => {
                 const link = document.createElement('a');
-                link.download = '太聰明-歌詞分享.png';
+                link.download = `太聰明-歌詞分享-${currentCanvasTheme}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
