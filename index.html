@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太聰明 - 陳綺貞</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'smart-blue': {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif TC"', 'serif'],
+                        sans: ['"Nunito"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f9ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bae6fd;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7dd3fc;
+        }
+
+        /* Input Range Styling for Audio Player */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #0284c7;
+            cursor: pointer;
+            margin-top: -6px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #bae6fd;
+            border-radius: 2px;
+        }
+        
+        .lyrics-line {
+            transition: color 0.3s ease;
+        }
+        .lyrics-line:hover {
+            color: #0369a1;
+        }
+        
+        /* Album art playing state */
+        .album-art-playing {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+            50% { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        }
+
+        /* Modal Transitions */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-smart-blue-50 to-white min-h-screen text-slate-700 font-serif flex flex-col items-center relative">
+
+    <!-- Content Container -->
+    <main class="w-full max-w-2xl px-6 py-12 md:py-20 flex-grow">
+        
+        <!-- Header info -->
+        <header class="text-center mb-16 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
+            <h1 class="text-4xl md:text-5xl font-bold text-smart-blue-900 mb-3 tracking-wide">太聰明</h1>
+            <p class="text-lg md:text-xl text-smart-blue-600 font-light tracking-widest">陳綺貞</p>
+            <div class="w-16 h-1 bg-smart-blue-200 mx-auto mt-6 rounded-full"></div>
+        </header>
+
+        <!-- Lyrics Section -->
+        <article id="lyricsContainer" class="space-y-12 text-center text-lg md:text-xl leading-loose tracking-wider opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+            
+            <section class="lyrics-block">
+                <p class="lyrics-line cursor-pointer" data-id="1">總以為謎一般難懂的我</p>
+                <p class="lyrics-line cursor-pointer" data-id="2">在你了解以後 其實也沒什麼</p>
+                <p class="lyrics-line cursor-pointer" data-id="3">我總是忽冷又忽熱隱藏我的感受</p>
+                <p class="lyrics-line cursor-pointer" data-id="4">只是怕愛你的心被你看透</p>
+            </section>
+
+            <section class="lyrics-block">
+                <p class="lyrics-line cursor-pointer" data-id="5">猜得沒錯想的太多不會有結果</p>
+                <p class="lyrics-line cursor-pointer" data-id="6">被你看穿了以後我更無處可躲</p>
+                <p class="lyrics-line cursor-pointer" data-id="7">我開始後悔不應該太聰明的賣弄</p>
+                <p class="lyrics-line cursor-pointer" data-id="8">只是怕親手將我的真心葬送</p>
+            </section>
+
+            <section class="lyrics-block font-medium text-smart-blue-800">
+                <p class="lyrics-line cursor-pointer" data-id="9">我猜著你的心</p>
+                <p class="lyrics-line cursor-pointer" data-id="10">要再一次確定</p>
+                <p class="lyrics-line cursor-pointer" data-id="11">遙遠的距離都是因為太過聰明</p>
+                <p class="lyrics-line cursor-pointer" data-id="12">要猜著你的心</p>
+                <p class="lyrics-line cursor-pointer" data-id="13">要再一次確定</p>
+                <p class="lyrics-line cursor-pointer" data-id="14">混亂的思緒都是因為太想靠近你</p>
+            </section>
+
+            <section class="lyrics-block text-slate-500">
+                <span class="block w-2 h-2 bg-smart-blue-200 rounded-full mx-auto my-8"></span>
+            </section>
+
+            <section class="lyrics-block">
+                <p class="lyrics-line cursor-pointer" data-id="15">猜得沒錯想的太多不會有結果</p>
+                <p class="lyrics-line cursor-pointer" data-id="16">被你看穿了以後我更無處可躲</p>
+                <p class="lyrics-line cursor-pointer" data-id="17">我開始後悔不應該太聰明的賣弄</p>
+                <p class="lyrics-line cursor-pointer" data-id="18">只是怕親手將我的真心葬送</p>
+            </section>
+
+            <section class="lyrics-block font-medium text-smart-blue-800">
+                <p class="lyrics-line cursor-pointer" data-id="19">我猜著你的心</p>
+                <p class="lyrics-line cursor-pointer" data-id="20">要再一次確定</p>
+                <p class="lyrics-line cursor-pointer" data-id="21">遙遠的距離都是因為太過聰明</p>
+                <p class="lyrics-line cursor-pointer" data-id="22">要猜著你的心</p>
+                <p class="lyrics-line cursor-pointer" data-id="23">要再一次確定</p>
+                <p class="lyrics-line cursor-pointer" data-id="24">混亂的思緒都是因為太想靠近你</p>
+            </section>
+
+            <section class="lyrics-block">
+                <p class="lyrics-line cursor-pointer" data-id="25">猜得沒錯想的太多不會有結果</p>
+                <p class="lyrics-line cursor-pointer" data-id="26">被你看穿了以後我更無處可躲</p>
+                <p class="lyrics-line cursor-pointer" data-id="27">我開始後悔 不應該太聰明的賣弄</p>
+                <p class="lyrics-line cursor-pointer" data-id="28">只是怕親手將我的真心葬送</p>
+            </section>
+
+            <section class="lyrics-block text-smart-blue-600 italic">
+                <p class="lyrics-line cursor-pointer" data-id="29">只是怕親手將我的真心葬送</p>
+                <p class="lyrics-line cursor-pointer" data-id="30">我開始後悔不應該太聰明的賣弄</p>
+                <p class="lyrics-line cursor-pointer" data-id="31">只是怕親手將我的真心葬送</p>
+            </section>
+
+        </article>
+        
+        <div class="h-24"></div> <!-- Spacer for aesthetic separation -->
+    </main>
+
+    <!-- Footer / Player Section -->
+    <footer class="w-full bg-white border-t border-smart-blue-100 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] mt-auto sticky bottom-0 z-20">
+        <div class="max-w-2xl mx-auto px-6 py-6 md:py-8">
+            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                
+                <!-- Album Cover -->
+                <div class="relative group flex-shrink-0">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-smart-blue-300 to-smart-blue-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div id="albumArt" class="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden shadow-lg bg-smart-blue-50">
+                        <img src="https://too.smart.btm-m.site/cover.jpg" 
+                             alt="太聰明 Album Cover" 
+                             class="w-full h-full object-cover transition-transform duration-700"
+                             crossorigin="anonymous"
+                             id="sourceCoverImage"
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzhYWRGOCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjIiIHJ5PSIyIj48L3JlY3Q+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxsaW5lIHgxPSIxMiIgeTE9IjgiIHgyPSIxMiIgeTI9IjE2Ij48L2xpbmU+PGxpbmUgeDE9IjgiIHkxPSIxMiIgeDI9IjE2IiB5Mj0iMTIiPjwvbGluZT48L3N2Zz4'; this.className='p-8 w-full h-full object-contain opacity-50'"
+                        >
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex-grow w-full font-sans">
+                    <!-- Title & Time -->
+                    <div class="flex items-center justify-between mb-2">
+                        <div>
+                            <h3 class="font-bold text-smart-blue-900 text-lg">太聰明</h3>
+                            <p class="text-sm text-smart-blue-500">陳綺貞</p>
+                        </div>
+                        <div class="text-xs font-mono text-smart-blue-400">
+                            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="relative w-full h-6 flex items-center mb-4 group cursor-pointer">
+                        <input type="range" id="progressBar" value="0" step="0.1" class="w-full z-10 relative cursor-pointer">
+                        <!-- Custom track background -->
+                        <div class="absolute w-full h-1 bg-smart-blue-100 rounded-full top-1/2 transform -translate-y-1/2 pointer-events-none overflow-hidden">
+                             <div id="progressFill" class="h-full bg-smart-blue-500 w-0 transition-all duration-100 ease-linear"></div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons Row: Flex Between to separate Play Controls and Share Button -->
+                    <div class="flex justify-between items-center">
+                        
+                        <!-- Play Controls (Grouped) -->
+                        <div class="flex items-center gap-6">
+                            <button id="skipBackBtn" class="text-smart-blue-300 hover:text-smart-blue-600 transition p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                            </button>
+
+                            <button id="playPauseBtn" class="w-12 h-12 bg-smart-blue-600 text-white rounded-full flex items-center justify-center hover:bg-smart-blue-700 shadow-md hover:shadow-lg transition transform active:scale-95">
+                                <!-- Play Icon -->
+                                <svg id="playIcon" class="ml-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <!-- Pause Icon -->
+                                <svg id="pauseIcon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                            </button>
+
+                            <button id="skipFwdBtn" class="text-smart-blue-300 hover:text-smart-blue-600 transition p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                            </button>
+                        </div>
+
+                        <!-- Share Button (Opposite End) -->
+                        <button id="openShareBtn" class="flex items-center gap-2 text-smart-blue-500 hover:text-smart-blue-700 hover:bg-smart-blue-50 px-3 py-2 rounded-lg transition" title="分享歌詞">
+                            <span class="text-sm font-semibold hidden md:inline">分享歌詞</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Share Modal Overlay -->
+    <div id="shareModal" class="fixed inset-0 z-50 hidden bg-smart-blue-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-fade-in-up">
+            
+            <!-- Left: Controls & Selection -->
+            <div class="w-full md:w-1/3 flex flex-col border-r border-smart-blue-100 bg-white">
+                <div class="p-6 border-b border-smart-blue-100 flex justify-between items-center bg-smart-blue-50">
+                    <h3 class="font-bold text-smart-blue-900 text-lg">選擇歌詞</h3>
+                    <button id="closeShareBtn" class="text-smart-blue-400 hover:text-smart-blue-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                
+                <div class="p-2 bg-yellow-50 text-yellow-700 text-xs text-center border-b border-yellow-100">
+                    點擊下方歌詞進行選擇
+                </div>
+
+                <!-- Lyrics List -->
+                <div id="modalLyricsList" class="flex-grow overflow-y-auto p-4 space-y-2 select-none">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Preview & Settings -->
+            <div class="w-full md:w-2/3 flex flex-col bg-slate-50 relative">
+                <!-- Toolbar -->
+                <div class="p-4 bg-white border-b border-smart-blue-100 flex flex-wrap gap-4 items-center justify-between z-10 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <!-- Cover Toggle -->
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-smart-blue-800">
+                            <input type="checkbox" id="showCoverCheck" checked class="accent-smart-blue-600 w-4 h-4">
+                            <span>顯示封面</span>
+                        </label>
+
+                        <!-- Alignment -->
+                        <div class="flex bg-smart-blue-50 rounded-lg p-1 border border-smart-blue-100">
+                            <button class="p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn" data-align="left" title="靠左">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
+                            </button>
+                            <button class="p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn bg-white shadow-sm" data-align="center" title="置中">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
+                            </button>
+                            <button class="p-1.5 rounded hover:bg-white hover:shadow-sm text-smart-blue-600 transition align-btn" data-align="right" title="靠右">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="downloadBtn" class="bg-smart-blue-600 hover:bg-smart-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        下載圖片
+                    </button>
+                </div>
+
+                <!-- Canvas Preview Container -->
+                <div class="flex-grow overflow-auto p-4 md:p-8 flex items-start justify-center bg-slate-200">
+                    <canvas id="shareCanvas" class="shadow-2xl max-w-full h-auto bg-white"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer" src="https://too.smart.btm-m.site/audio.mp3" preload="metadata"></audio>
+
+    <!-- JS Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Audio Logic
+            const audio = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const currentTimeEl = document.getElementById('currentTime');
+            const durationEl = document.getElementById('duration');
+            const albumArt = document.getElementById('albumArt');
+            const skipBackBtn = document.getElementById('skipBackBtn');
+            const skipFwdBtn = document.getElementById('skipFwdBtn');
+
+            // Share Modal Logic Elements
+            const openShareBtn = document.getElementById('openShareBtn');
+            const closeShareBtn = document.getElementById('closeShareBtn');
+            const shareModal = document.getElementById('shareModal');
+            const modalLyricsList = document.getElementById('modalLyricsList');
+            const canvas = document.getElementById('shareCanvas');
+            const ctx = canvas.getContext('2d');
+            const showCoverCheck = document.getElementById('showCoverCheck');
+            const alignBtns = document.querySelectorAll('.align-btn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const sourceCoverImage = document.getElementById('sourceCoverImage');
+
+            // State
+            let isDragging = false;
+            let selectedLyrics = new Set();
+            let currentAlign = 'center';
+            let showCover = true;
+            let lyricsData = [];
+
+            // --- Audio Player Logic (Preserved) ---
+            const formatTime = (seconds) => {
+                if (isNaN(seconds)) return "0:00";
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            };
+
+            const togglePlay = () => {
+                if (audio.paused) {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {}).catch(error => {
+                            if (error.name === 'AbortError') console.log('Playback interrupted.');
+                            else console.error('Playback failed:', error);
+                        });
+                    }
+                } else {
+                    audio.pause();
+                }
+            };
+
+            const updatePlayState = () => {
+                if (audio.paused) {
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                    albumArt.classList.remove('album-art-playing');
+                } else {
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    albumArt.classList.add('album-art-playing');
+                }
+            };
+
+            playPauseBtn.addEventListener('click', togglePlay);
+            audio.addEventListener('play', updatePlayState);
+            audio.addEventListener('pause', updatePlayState);
+            audio.addEventListener('ended', () => {
+                updatePlayState();
+                progressBar.value = 0;
+                progressFill.style.width = '0%';
+                currentTimeEl.textContent = "0:00";
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                if (!isDragging) {
+                    const percent = (audio.currentTime / audio.duration) * 100;
+                    progressBar.value = percent || 0;
+                    progressFill.style.width = `${percent || 0}%`;
+                    currentTimeEl.textContent = formatTime(audio.currentTime);
+                }
+            });
+
+            audio.addEventListener('loadedmetadata', () => {
+                durationEl.textContent = formatTime(audio.duration);
+                progressBar.max = 100;
+            });
+
+            progressBar.addEventListener('input', (e) => {
+                isDragging = true;
+                const percent = e.target.value;
+                progressFill.style.width = `${percent}%`;
+                const seekTime = (percent / 100) * audio.duration;
+                currentTimeEl.textContent = formatTime(seekTime);
+            });
+
+            progressBar.addEventListener('change', (e) => {
+                const percent = e.target.value;
+                const seekTime = (percent / 100) * audio.duration;
+                audio.currentTime = seekTime;
+                isDragging = false;
+            });
+
+            skipBackBtn.addEventListener('click', () => audio.currentTime = Math.max(0, audio.currentTime - 10));
+            skipFwdBtn.addEventListener('click', () => audio.currentTime = Math.min(audio.duration, audio.currentTime + 10));
+            
+            if (audio.readyState >= 1) durationEl.textContent = formatTime(audio.duration);
+
+
+            // --- Share Feature Logic ---
+
+            // 1. Parse Lyrics
+            const initLyricsData = () => {
+                const lines = document.querySelectorAll('.lyrics-line');
+                lyricsData = Array.from(lines).map((line, index) => ({
+                    id: index,
+                    text: line.innerText
+                }));
+            };
+
+            // 2. Populate Modal List
+            const populateModalList = () => {
+                modalLyricsList.innerHTML = '';
+                lyricsData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = `p-3 rounded-lg cursor-pointer transition text-sm md:text-base border ${selectedLyrics.has(item.id) 
+                        ? 'bg-smart-blue-100 border-smart-blue-300 text-smart-blue-900 font-bold' 
+                        : 'hover:bg-gray-50 border-transparent text-gray-600'}`;
+                    div.textContent = item.text;
+                    div.onclick = () => toggleLyricSelection(item.id);
+                    modalLyricsList.appendChild(div);
+                });
+            };
+
+            const toggleLyricSelection = (id) => {
+                if (selectedLyrics.has(id)) {
+                    selectedLyrics.delete(id);
+                } else {
+                    selectedLyrics.add(id);
+                }
+                populateModalList(); // Re-render list to show active state
+                drawCanvas(); // Re-draw canvas
+            };
+
+            // 3. Draw Canvas
+            const drawCanvas = () => {
+                // Config
+                const width = 1080;
+                // Calculate height dynamically based on content
+                // Base padding
+                const padding = 80;
+                const lineSpacing = 100; // Space between lines
+                const fontSize = 48;
+                
+                // Content Metrics
+                const coverSize = showCover ? 500 : 0;
+                const coverMargin = showCover ? 60 : 0;
+                const selectedLines = lyricsData.filter(l => selectedLyrics.has(l.id));
+                const textHeight = Math.max(1, selectedLines.length) * (fontSize * 1.8); 
+                const footerHeight = 150;
+
+                const totalHeight = padding + coverSize + coverMargin + textHeight + footerHeight + padding;
+
+                // Set Canvas Size
+                canvas.width = width;
+                canvas.height = totalHeight;
+
+                // --- Background ---
+                const gradient = ctx.createLinearGradient(0, 0, width, totalHeight);
+                gradient.addColorStop(0, '#f0f9ff'); // smart-blue-50
+                gradient.addColorStop(1, '#ffffff');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, totalHeight);
+
+                let currentY = padding;
+
+                // --- Cover Image ---
+                if (showCover && sourceCoverImage.complete) {
+                    try {
+                        const coverX = (width - coverSize) / 2;
+                        
+                        // Shadow
+                        ctx.save();
+                        ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
+                        ctx.shadowBlur = 40;
+                        ctx.shadowOffsetY = 20;
+                        
+                        // Draw Image
+                        // Note: Using the source image from DOM which has crossorigin set
+                        // We assume it's loaded because of window.onload or prior check
+                        ctx.drawImage(sourceCoverImage, coverX, currentY, coverSize, coverSize);
+                        ctx.restore();
+
+                        currentY += coverSize + coverMargin;
+                    } catch (e) {
+                        console.warn("Canvas Tainted or Image Error", e);
+                        // Fallback placeholder
+                        ctx.fillStyle = "#bae6fd";
+                        ctx.fillRect((width-coverSize)/2, currentY, coverSize, coverSize);
+                        currentY += coverSize + coverMargin;
+                    }
+                } else if (showCover) {
+                    // Placeholder if loading or broken
+                    ctx.fillStyle = "#e0f2fe";
+                    ctx.fillRect((width-500)/2, currentY, 500, 500);
+                    currentY += 560;
+                }
+
+                // --- Lyrics Text ---
+                ctx.font = `600 ${fontSize}px "Noto Serif TC", serif`;
+                ctx.fillStyle = "#0c4a6e"; // smart-blue-900
+                ctx.textBaseline = "middle";
+
+                if (selectedLines.length === 0) {
+                    // Prompt text
+                    ctx.fillStyle = "#94a3b8";
+                    ctx.textAlign = "center";
+                    ctx.fillText("請選擇歌詞...", width / 2, currentY + 50);
+                    currentY += 100;
+                } else {
+                    selectedLines.forEach(line => {
+                        let x = width / 2;
+                        if (currentAlign === 'left') x = 120; // Padding left
+                        if (currentAlign === 'right') x = width - 120; // Padding right
+
+                        ctx.textAlign = currentAlign;
+                        ctx.fillText(line.text, x, currentY + (fontSize/2));
+                        currentY += (fontSize * 1.8); // Line height
+                    });
+                }
+
+                // --- Footer (Title & Artist) ---
+                // Push footer to bottom area relative to text, but ensure spacing
+                currentY += 60; 
+
+                // Draw decorative divider
+                ctx.strokeStyle = "#bae6fd"; // smart-blue-200
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(width / 2 - 40, currentY);
+                ctx.lineTo(width / 2 + 40, currentY);
+                ctx.stroke();
+
+                currentY += 60;
+
+                ctx.font = `bold 42px "Noto Serif TC", serif`;
+                ctx.fillStyle = "#0284c7"; // smart-blue-600
+                ctx.textAlign = "center";
+                
+                // Calculate positions for Title and Artist based on align setting?
+                // Requirements say: "Cover (opt), Selected Lyrics, Title/Artist (Left/Center/Right positioning optional?)"
+                // "Cover, Lyrics, Title, Artist" layout.
+                // Let's stick to the align setting for consistency.
+                
+                let footerX = width / 2;
+                if (currentAlign === 'left') footerX = 120;
+                if (currentAlign === 'right') footerX = width - 120;
+                ctx.textAlign = currentAlign;
+
+                ctx.fillText("太聰明", footerX, currentY);
+                
+                currentY += 55;
+                ctx.font = `32px "Noto Serif TC", serif`;
+                ctx.fillStyle = "#64748b"; // slate-500
+                ctx.fillText("陳綺貞", footerX, currentY);
+            };
+
+            // 4. Interaction Handlers
+            openShareBtn.addEventListener('click', () => {
+                initLyricsData();
+                populateModalList();
+                shareModal.classList.remove('hidden');
+                // Use a slight timeout to allow image to load if not cached, though likely it is
+                setTimeout(() => {
+                    drawCanvas();
+                    // Initial animation class
+                    shareModal.children[0].classList.add('modal-enter-active');
+                }, 50);
+            });
+
+            closeShareBtn.addEventListener('click', () => {
+                shareModal.classList.add('hidden');
+            });
+
+            showCoverCheck.addEventListener('change', (e) => {
+                showCover = e.target.checked;
+                drawCanvas();
+            });
+
+            alignBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // UI update
+                    alignBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'shadow-sm');
+                        b.classList.add('hover:bg-white');
+                    });
+                    btn.classList.add('bg-white', 'shadow-sm');
+                    btn.classList.remove('hover:bg-white');
+                    
+                    currentAlign = btn.dataset.align;
+                    drawCanvas();
+                });
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = '太聰明-歌詞分享.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            // Initial Setup
+            initLyricsData();
+        });
+    </script>
+</body>
+</html>
